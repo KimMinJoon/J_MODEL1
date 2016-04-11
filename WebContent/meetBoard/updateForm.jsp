@@ -9,7 +9,6 @@
 <link rel="stylesheet" type="text/css" href="comm.css">
 </head>
 <body>
-
 <%
 	int brd_no = Integer.parseInt(request.getParameter("brd_no"));
 	String pageNum = request.getParameter("pageNum");
@@ -18,13 +17,12 @@
 	J_CodeDao jcd = J_CodeDao.getInstance();
 	List<J_Code> list = jcd.selectList();
 	// 로그인없이 게시글 접근 시 막기 
+	
 %>
-
 <form action="../meetBoard/updatePro.jsp" method="post">
 	<input type="hidden" name="brd_no" value="<%=meetboard.getBrd_no() %>">
 	<input type="hidden" name="pageNum" value="<%=pageNum %>">
 <table border="1"><caption>게시판 수정</caption>
-
 <tr>
 		<td class="join1">제목</td><td><input type="text" name="brd_subject" required="required" autofocus="autofocus" value="<%=meetboard.getBrd_subject()%>"></td>
 	</tr>
@@ -76,7 +74,6 @@
 		</td>
 	</tr>
 </table>
-
 </form>
 </body>
 </html>

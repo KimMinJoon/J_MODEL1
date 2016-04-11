@@ -67,7 +67,7 @@
 			} else {
 		%>
 		<button
-			onclick="location.href='../module/main.jsp?pgm=/noticeBoard/noticeMenuTemp.jsp?nbpgm=/noticeBoard/updateForm.do?brd_no=<%=brd_no%>&pageNum=<%=pageNum%>'">수정</button>
+			onclick="location.href='../module/main.jsp?pgm=/noticeBoard/noticeMenuTemp.jsp?nbpgm=/noticeBoard/updateForm.jsp?brd_no=<%=brd_no%>&pageNum=<%=pageNum%>'">수정</button>
 		<!-- 이렇게해야 수정을 누르면 수정클릭한 해당 페이지로 보내준다. -->
 		<button
 			onclick="location.href='../module/main.jsp?pgm=/noticeBoard/noticeMenuTemp.jsp?nbpgm=/noticeBoard/deleteForm.jsp?brd_no=<%=brd_no%>&pageNum=<%=pageNum%>'">삭제</button>

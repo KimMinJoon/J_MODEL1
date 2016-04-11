@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8" import="j_noticeboard.*"%>
 <%@ include file="../session/adminChk.jsp"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -9,16 +8,26 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<c:if test="${result > 0}">
-		<script type="text/javascript">
-			location.href = "../module/main.jsp?pgm=/noticeBoard/noticeMenuTemp.jsp?nbpgm=/noticeBoard/list.jsp?pageNum=${pageNum}";
-		</script>
-	</c:if>
-	<c:if test="${result <= 0}">
-		<script type="text/javascript">
-			alert("수정 실패");
-			history.go(-1);
-		</script>
-	</c:if>
+	<%
+		request.setCharacterEncoding("utf-8");
+	%>
+	<jsp:useBean id="noticeboard" class="j_noticeboard.J_NoticeBoard"></jsp:useBean>
+	<jsp:setProperty property="*" name="noticeboard" />
+	<%
+		String pageNum = request.getParameter("pageNum");
+		J_NoticeBoardDao bd = J_NoticeBoardDao.getInstance();
+		int result = bd.update(noticeboard);
+		System.out.print("result : " + result);
+		if (result > 0) {
+			response.sendRedirect("../module/main.jsp?pgm=/noticeBoard/noticeMenuTemp.jsp?nbpgm=/noticeBoard/list.jsp?pageNum=" + pageNum);
+		} else {
+	%>
+	<script type="text/javascript">
+		alert("수정 실패");
+		history.go(-1);
+	</script>
+	<%
+		}
+	%>
 </body>
 </html>

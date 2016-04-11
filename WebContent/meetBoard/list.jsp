@@ -7,19 +7,10 @@
 <title>Insert title here</title>
 <%
 	String m_no = (String) session.getAttribute("m_no");
+	System.out.println(m_no);//이거0
 	String pageNum = request.getParameter("pageNum");//패이지를 읽어오지않으면!
 	J_MeetBoardDao bd = J_MeetBoardDao.getInstance();
-	String searchType = request.getParameter("searchType");
-	String searchTxt = request.getParameter("searchTxt");
-	
-	if(searchType == null || searchType.equals("null") || searchType.equals("")){
-		searchType = "brd_content";
-	}
-	
-	if(searchTxt == null || searchTxt.equals("null")){
-		searchTxt = "";
-	}
-	
+
 %>
 <script type="text/javascript">
 function chk(m_no) {
@@ -36,12 +27,6 @@ function chk(m_no) {
 		
 }
 
-function locate(pageNum){
-	var searchType = document.getElementById("searchType");
-	var searchTxt = document.getElementById("searchTxt");
-	location.href="main.jsp?pgm=/meetBoard/list.jsp?pageNum=" + pageNum + "&searchType=" + searchType.value + "&searchTxt=" + searchTxt.value;
-}
-
 </script>
 
 <link type="text/css" rel="stylesheet" href="../css/projectcss.css">
@@ -54,12 +39,22 @@ function locate(pageNum){
 	</tr>
 	
 <%
+	
+
+	/* String m_no = (String)session.getAttribute("m_no");
+	String path = application.getContextPath();
+	if(m_no == null || m_no.equals("") || m_no.equals("null")){
+	   response.sendRedirect(path+"/module/main.jsp?pgm=/member/login.jsp");
+	} 
+ */
+
+	
 
 	int rowPerPage = 15;//한페이지에 보여줄 게시글의 수
 	int pagePerBlock = 10;//한페이지에 보여줄 블락의 수 (블락은 10페이지)
 	if (pageNum == null || pageNum.equals("null")||pageNum.equals("")) pageNum = "1";//페이지는 1이다.
 	int nowPage = Integer.parseInt(pageNum);
-	int total = bd.selectTotal(searchType, searchTxt);
+	int total = bd.selectTotal();
 	int totalPage = (int)Math.ceil((double)total/rowPerPage);
 	int startRow = (nowPage - 1) * rowPerPage + 1;
 	int endRow = startRow + rowPerPage - 1;
@@ -71,8 +66,7 @@ function locate(pageNum){
 		endPage = totalPage;
 	}
 	total = total - startRow +1;
-	
-	List<J_MeetBoard> list = bd.selectList(startRow, endRow, searchType, searchTxt);
+	List<J_MeetBoard> list = bd.selectList(startRow, endRow);
 	if (list.size() != 0){
 		for(J_MeetBoard brd : list){
 %>
@@ -118,66 +112,31 @@ function locate(pageNum){
 %>
 </table>
 <div align="center">
-
-	<a href="javascript:locate(1)">[첫페이지]</a>
-
 <%
 	if (startPage > pagePerBlock) {
 %>
-	<a href="javascript:locate(<%=startPage-pagePerBlock%>)">[이전]</a>
+	<a href="../module/main.jsp?pgm=/meetBoard/list.jsp?pageNum=1">[첫페이지]</a>
+	<a href="../module/main.jsp?pgm=/meetBoard/list.jsp?pageNum=<%=startPage-pagePerBlock%>">[이전]</a>
 <%
 	}
 
 	for(int i = startPage; i <= endPage; i++){
-		if (nowPage != i) {
 %>
-	<a href="javascript:locate(<%=i%>)"><%=i%></a>
+	<a href="../module/main.jsp?pgm=/meetBoard/list.jsp?pageNum=<%=i%>">[<%=i %>]</a>
 	<!-- i를누르면 pageNum을 가지고 다시 그페이지로 넘어가라 -->
 <%
-	} else {
-%>
-	<strong>
-		[<%=i%>]
-	</strong>
-<%
-		}
 	}
 	if (totalPage > endPage) {
 %>
-	<a href="javascript:locate(<%=startPage + pagePerBlock%>)">[다음]</a>
+	<a href="../module/main.jsp?pgm=/meetBoard/list.jsp?pageNum=<%=startPage+pagePerBlock%>">[다음]</a>
+	<a href="../module/main.jsp?pgm=/meetBoard/list.jsp?pageNum=<%=totalPage%>">[마지막페이지]</a>
 <%
 	}
 %>
-
-	<a href="javascript:locate(<%=totalPage%>)">[마지막페이지]</a>
-
 	<%-- <br><button onclick="location.href='writeForm.jsp?pageNum=<%=pageNum%>'">글쓰기</button>  --%>
 	<!-- <br><input type="submit" value="글쓰기"> -->
 	<br><button onclick="chk(<%=m_no%>)" name="writeBtn">글쓰기</button> 
 
-<br>
-			<select id="searchType">
-				<option value="brd_content" 
-				<%
-					if(searchType.equals("brd_content")){
-				%>
-					selected="selected"
-				<%
-					}
-				%>
-				>제목 + 내용</option>
-				<option value="m_nick"
-				<%
-					if(searchType.equals("m_nick")){
-				%>
-					selected="selected"
-				<%
-					}
-				%>
-				>글쓴이</option>
-			</select>
-			<input type="text" id="searchTxt" value="<%=searchTxt%>">
-			<input type="submit" value="검색" onclick="locate(1)">
 </div>
 
 </body>
