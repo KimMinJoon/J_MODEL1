@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+	request.setCharacterEncoding("utf-8");
+	String pgm = request.getParameter("pgm");
+	if (pgm == null || pgm == "") {
+		pgm = "home.jsp";
+	}
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -17,10 +24,7 @@
 			<td><jsp:include page="menu.jsp"/></td>
 		</tr>
 		<tr>
-			<td>
-			<c:if test="${empty param.pgm}"><jsp:include page="home.jsp"></jsp:include></c:if>
-			<c:if test="${not empty param.pgm}"><jsp:include page="${param.pgm }"></jsp:include></c:if>
-			</td>
+			<td><jsp:include page="<%=pgm%>"/></td>
 		</tr>
 		<tr>
 			<td colspan="2" height="40"><jsp:include page="bottom.jsp" /></td>
