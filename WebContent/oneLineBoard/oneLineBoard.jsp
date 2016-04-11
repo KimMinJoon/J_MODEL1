@@ -5,7 +5,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,7 +43,7 @@
 	font-size: 0.75em;
 }
 </style>
-<%-- <%	
+<%	
 		String mno = (String)session.getAttribute("m_no");
 		
 		String searchType = request.getParameter("searchType");
@@ -84,7 +83,7 @@
 
 		List<J_OneLineBoard> list = jobd.selectOneLine(startRow, endRow, searchType, searchTxt);
 		
-%> --%>
+%>
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -122,6 +121,14 @@
 			$(this).parent().parent().prev().prev().show("slow");	
 		});
 	});
+	
+	function replyForm(id){
+		var originRow = document.getElementById(id);
+		var replyRow = document.getElementById("r" + id);
+		originRow.style.display = "none";
+		replyRow.style.display = "block";
+	}
+	
 	function deleteChk(brd_no,pageNum){
 		if(confirm("정말 삭제하시겠습니까?")){
 			location.href="../oneLineBoard/deleteOneline.jsp?brd_no="+brd_no+"&pageNum="+pageNum;	
@@ -171,8 +178,8 @@
 <body>
 	<div style="border: 1px solid; padding: 10px 10px 10px 10px;"
 		class="wrap">
-		<form action="../oneLineBoard/insertOneline.jsp" name="wrtierFrm" onsubmit="return isSubmit(${sessionScope.m_no})">
-			<input type="hidden" name="m_no" value="${sessionScope.m_no}">
+		<form action="../oneLineBoard/insertOneline.jsp" name="wrtierFrm" onsubmit="return isSubmit(<%=mno%>)">
+			<input type="hidden" name="m_no" value="<%=mno%>">
 			<textarea rows="3" cols="50" maxlength="150" id="content"
 				name="brd_content" required="required" onkeyup="textCheck()"></textarea>
 			<span id="counter">0/150</span> <input
@@ -184,134 +191,172 @@
 	<div
 		style=" border: 1px solid; padding: 10px 10px 10px 10px;"
 		class="wrap">
-		<c:set var="tot" value="${total}" />
-		<c:if test="${list != null}">
-			<c:if test="${not empty list}">
-				<c:forEach var="jolb" items="${list}">
-					<div class="row">
-						<p>${tot}&nbsp;${jolb.m_nick}&nbsp;${jolb.brd_reg_date}
-						<pre style="width:600px; white-space: pre-line;word-break:break-all;">${jolb.brd_content}</pre>
-						<a href="">[${jolb.rep_count}]</a>
-						<c:if test="${sessionScope.m_no != null}">
-							<c:if test="${jolb.m_no == sessionScope.m_no}">
+			
+		<%
+				if (list != null) {
+					if(list.size() > 0){
+						for (int i = 0 ; i < list.size(); i++) {
+							J_OneLineBoard jolb = list.get(i);
+		%>
+		<div class="row">
+			<p><%=total--%>&nbsp;<%=jolb.getM_nick()%>&nbsp;<%=jolb.getBrd_reg_date()%>
+			<pre style="width:600px; white-space: pre-line;word-break:break-all;"><%=jolb.getBrd_content()%></pre>
+			<a href="javascript:replyForm(<%=i%>)">[<%=jolb.getRep_count()%>]</a>	
+					<%
+						if (mno != null) {
+							if (jolb.getM_no() == Integer.parseInt(mno)) {
+					%> 
 								<input type="button" class="btnUpdate" value="수정">
-								<input type="button" value="삭제" onclick="deleteChk(${jolb.brd_no},${pageNum})">
-							</c:if>
-							<input type="button" class="btnReply" value="답글">
-						</c:if>
-						</p>
-					</div>
-					<div class="updateForm">
-						<form action="../oneLineBoard/updateOneline.jsp" name="updateFrm" method="post" onsubmit="return isSubmit(${sessionScope.m_no})">
-							<input type="button" class="updateCancel" value="취소">
-							<input type="hidden" name="m_no" value="${sessionScope.m_no}">
-							<input type="hidden" name="pageNum" value="${pageNum}">
-							<input type="hidden" name="brd_no" value="${jolb.brd_no}">
-							<p class="originText" style="display: none;">${jolb.brd_content}</p>
-							<textarea rows="3" cols="100" maxlength="150" class="updateContent"
-									name="brd_content" required="required">${jolb.brd_content}</textarea>
-							<input style="height: 50px; width: 120px;" type="submit" value="등록">
-						</form>
-					</div>
-					<div class="replyForm">
-						<form action="../oneLineBoard/insertReplyOneline.jsp" name="replyFrm" onsubmit="return isSubmit(${sessionScope.m_no })" method="post">
-							<input type="hidden" name="m_no" value="${sessionScope.m_no }">
-							<input type="hidden" name="brd_no" value="${jolb.brd_no}">
-							<input type="hidden" name="pageNum" value="${pageNum}">
-							<input type="button" class="replyCancel" value="취소"></p>
-							<textarea rows="3" cols="100" maxlength="150" class="replyContent"
-								name="content" required="required"></textarea>
-					 		<input style="height: 50px; width: 120px;" type="submit" value="등록">
-						</form>
-						<%-- <div>
-							
+								<input type="button" value="삭제" onclick="deleteChk(<%=jolb.getBrd_no()%>,<%=pageNum%>)">
+					<%
+		 					}
+					%> 
+								<input type="button" class="btnReply" value="답글">
+					<%
+						}
+					%>
+			</p>
+		</div>
+		<div class="updateForm">
+			<form action="../oneLineBoard/updateOneline.jsp" name="updateFrm" method="post" onsubmit="return isSubmit(<%=mno%>)">
+				<input type="button" class="updateCancel" value="취소">
+				<input type="hidden" name="m_no" value="<%=mno%>">
+				<input type="hidden" name="pageNum" value="<%=pageNum%>">
+				<input type="hidden" name="brd_no" value="<%=jolb.getBrd_no()%>">
+				<p class="originText" style="display: none;"><%=jolb.getBrd_content()%></p>
+				<textarea rows="3" cols="100" maxlength="150" class="updateContent"
+						name="brd_content" required="required"><%=jolb.getBrd_content()%></textarea>
+				<input style="height: 50px; width: 120px;" type="submit" value="등록">
+			</form>
+		</div>
+		<div class="replyForm">
+			<form action="../oneLineBoard/insertReplyOneline.jsp" name="replyFrm" onsubmit="return isSubmit(<%=mno%>)" method="post">
+				<input type="hidden" name="m_no" value="<%=mno%>">
+				<input type="hidden" name="brd_no" value="<%=jolb.getBrd_no()%>">
+				<input type="hidden" name="pageNum" value="<%=pageNum%>">
+				<input type="button" class="replyCancel" value="취소"></p>
+				<textarea rows="3" cols="100" maxlength="150" class="replyContent"
+					name="content" required="required"></textarea>
+		 		<input style="height: 50px; width: 120px;" type="submit" value="등록">
+			</form>
+			<div>
+				
+				<%
+				System.out.println(jolb.getBrd_no());
+					List<J_OneLineReply> reList = jobd.selectReply(jolb.getBrd_no());
+					if(reList != null){
+						System.out.println(reList.size());
+						for(J_OneLineReply jolr : reList){
+							System.out.println(jolr);
+				%>
+						<div class="replyRow">
+							<img src="../images/re.gif"><%=jolr.getM_nick()%><%=jolr.getReg_Date()%><%=jolr.getContent()%>
 							<%
-							System.out.println(jolb.getBrd_no());
-								List<J_OneLineReply> reList = jobd.selectReply(jolb.getBrd_no());
-								if(reList != null){
-									System.out.println(reList.size());
-									for(J_OneLineReply jolr : reList){
-										System.out.println(jolr);
+								if(mno != null){
+									System.out.println("mno : " + mno + ", rep 작성자 mno : " + jolr.getM_no());
+									if(Integer.parseInt(mno) == jolr.getM_no()){
 							%>
-									<div class="replyRow">
-										<img src="../images/re.gif"><%=jolr.getM_nick()%><%=jolr.getReg_Date()%><%=jolr.getContent()%>
-										<%
-											if(mno != null){
-												System.out.println("mno : " + mno + ", rep 작성자 mno : " + jolr.getM_no());
-												if(Integer.parseInt(mno) == jolr.getM_no()){
-										%>
-												<input type="button" value="수정" id="btnRepUpdate">
-												<input type="button" value="삭제" onclick="deleteRepChk(<%=jolr.getReply_no()%>)">
-										<%
-												}
-											}
-										%>
-									
-									</div>
-									<div class="replyUpdate" style="display: none;">
-										<form action="../oneLineBoard/oneLineReplyUpdate.jsp" method="post" >
-											<input type="hidden" value="<%=jolr.getReply_no()%>">
-											<input type="hidden" value="<%=jolr.getBrd_no()%>">
-											<input type="button" id="repUpdateCancel" value="취소">
-											<textarea rows="3" cols="100" maxlength="150" class="updateReContent"
-												name="content" required="required"><%=jolr.getContent()%></textarea>
-											<input type="submit" value="등록">
-										</form>
-									</div>
+									<input type="button" value="수정" id="btnRepUpdate">
+									<input type="button" value="삭제" onclick="deleteRepChk(<%=jolr.getReply_no()%>)">
 							<%
 									}
 								}
 							%>
-						</div> --%>
-					</div>
-				</c:forEach>
-			</c:if>
-		</c:if>
-		<c:if test="${empty list }">
-			<p>no data found</p>
-		</c:if>
-				
-
+						
+						</div>
+						<div class="replyUpdate" style="display: none;">
+							<form action="../oneLineBoard/oneLineReplyUpdate.jsp" method="post" >
+								<input type="hidden" value="<%=jolr.getReply_no()%>">
+								<input type="hidden" value="<%=jolr.getBrd_no()%>">
+								<input type="button" id="repUpdateCancel" value="취소">
+								<textarea rows="3" cols="100" maxlength="150" class="updateReContent"
+									name="content" required="required"><%=jolr.getContent()%></textarea>
+								<input type="submit" value="등록">
+							</form>
+						</div>
+				<%
+						}
+					}
+				%>
+			</div>
+		</div>
+			<%
+						}
+					}else{
+			%>
+				<p>no data found</p>
+			<%
+					}
+				}
+			%>
 		
 		<div align="center" id="pagingandsearch">
-			<c:if test="${startPage != 1}">
-				<a href="javascript:locate(1)">&lt;&lt;맨 앞으로</a>
-			</c:if>
-			<c:if test="${startPage > pagePerBlock}">
-				<a href="javascript:locate(${startPage - pagePerBlock})">&lt;이전</a>
-			</c:if>
- 			<c:forEach var="i" begin="${startPage}" end="${endPage}">
- 				<c:if test="${nowPage != i}">
- 					<a href="javascript:locate(${i})">${i}</a>
- 				</c:if>
- 				<c:if test="${nowPage == i}">
- 					<strong>[${i}]</strong>
- 				</c:if>
-			</c:forEach>
-			<c:if test="${totalPage > endPage}">
-				<a href="javascript:locate(${startPage + pagePerBlock})">다음&gt;</a>
-			</c:if>
-			<c:if test="${endPage != totalPage}">
-				<a href="javascript:locate(${totalPage})">맨 뒤로&gt;&gt;</a>
-			</c:if>
+			<%
+				if (startPage != 1) {
+			%>
+			<a href="javascript:locate(1)">&lt;&lt;맨
+				앞으로</a>
+			<%
+				}
+				if (startPage > pagePerBlock) {
+			%>
+			<a
+				href="javascript:locate(<%=startPage - pagePerBlock%>)">&lt;이전</a>
+			<%
+				}
+			%>
+			<%
+				for (int i = startPage; i <= endPage; i++) {
+					if (nowPage != i) {
+			%>
+			<a href="javascript:locate(<%=i%>)"><%=i%></a>
+			<%
+				} else {
+			%>
+			<strong>
+				[<%=i%>]
+			</strong>
+			<%
+					}
+				}
+				if (totalPage > endPage) {
+			%>
+			<a
+				href="javascript:locate(<%=startPage + pagePerBlock%>)">다음&gt;</a>
+			<%
+				}
+			%>
+			<%
+				if (endPage != totalPage) {
+			%>
+			<a
+				href="javascript:locate(<%=totalPage%>)">맨
+				뒤로&gt;&gt;</a>
+			<%
+				}
+			%>
 			<br>
 			<select id="searchType">
-				<c:set var="brd_content" value="brd_contents"/>
-				<c:if test="${searchType eq brd_content}">
-					<option value="brd_content" selected="selected">내용</option>
-				</c:if>
-				<c:if test="${searchType ne brd_content}">
-					<option value="brd_content">내용</option>
-				</c:if>
-				<c:set var="m_nick" value="m_nick"/>
-				<c:if test="${searchType eq m_nick}">
-					<option value="m_nick" selected="selected">글쓴이</option>
-				</c:if>
-				<c:if test="${searchType ne m_nick}">
-					<option value="m_nick">글쓴이</option>
-				</c:if>
+				<option value="brd_content" 
+				<%
+					if(searchType.equals("brd_content")){
+				%>
+					selected="selected"
+				<%
+					}
+				%>
+				>내용</option>
+				<option value="m_nick"
+				<%
+					if(searchType.equals("m_nick")){
+				%>
+					selected="selected"
+				<%
+					}
+				%>
+				>글쓴이</option>
 			</select>
-			<input type="text" id="searchTxt" value="${searchTxt}">
+			<input type="text" id="searchTxt" value="<%=searchTxt%>">
 			<input type="submit" value="검색" onclick="locate(1)">
 		</div>
 	</div>

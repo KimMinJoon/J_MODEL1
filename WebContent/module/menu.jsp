@@ -16,7 +16,7 @@
 			<td width="20%" align="center"><a href="main.jsp?pgm=/noticeBoard/noticeMenuTemp.jsp">사이트소개/공지사항</a></td>
 			<td width="20%" align="center"><a href="main.jsp?pgm=/meetBoard/list.jsp">모임 게시판</a></td>
 			<td width="20%" align="center"><a href="main.jsp?pgm=/recommendBoard/list.jsp">추천 게시판</a></td>
-			<td width="20%" align="center"><a href="main.jsp?pgm=/oneLineBoard/list.do">한줄 게시판</a></td>
+			<td width="20%" align="center"><a href="main.jsp?pgm=/oneLineBoard/oneLineBoard.jsp">한줄 게시판</a></td>
 			<td width="20%" align="center">
 			<input type="text" id="search" name="search" size=15 />
 			<input type="button" id="search" name="search" value="검색"/>
