@@ -17,11 +17,10 @@
 	J_MeetBoardDao bd = J_MeetBoardDao.getInstance();
 	int result = bd.update(meetboard);
 	if (result > 0){
-		
 %>
 	<script type="text/javascript">
 		alert("수정 성공");
-		location.href="list.jsp?pageNum=<%=pageNum%>";
+		location.href="../module/main.jsp?pgm=/meetBoard/view.jsp?brd_no=<%=meetboard.getBrd_no()%>&pageNum=<%=pageNum %>";
 	</script>
 <%
 	}else {

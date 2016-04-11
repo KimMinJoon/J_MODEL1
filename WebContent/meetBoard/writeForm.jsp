@@ -1,6 +1,6 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="j_board.*,j_code.*"%>
+    pageEncoding="UTF-8" import="j_meetboard.*,j_code.*"%>
     <%@ include file="../session/sessionChk.jsp"  %>
 <!DOCTYPE ><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
