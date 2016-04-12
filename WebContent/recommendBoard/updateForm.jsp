@@ -31,17 +31,15 @@
 			<tr height="50">
 				<td class="join1">말머리</td>
 				<td><select name="rc_code">
-						<option value="<%=jrb.getRc_code()%>" selected="selected">
-							<%=jrb.getRc_value()%></option>
 						<%
 							for (J_Code jmc : list) {
 								if (jmc.getC_major().equals("rc")) {
 						%>
-						<option value=<%=jmc.getC_minor()%>>
-							<%=jmc.getC_value()%>
-						</option>
+									<option value=<%=jmc.getC_minor()%>>
+										<%=jmc.getC_value()%>
+									</option>
 						<%
-							}
+								}
 							}
 						%>
 				</select></td>
