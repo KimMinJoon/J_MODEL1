@@ -13,7 +13,7 @@
 	String searchTxt = request.getParameter("searchTxt");
 	
 	if(searchType == null || searchType.equals("null") || searchType.equals("")){
-		searchType = "brd_content";
+		searchType = "all";
 	}
 	
 	if(searchTxt == null || searchTxt.equals("null")){
@@ -157,6 +157,26 @@ function locate(pageNum){
 
 <br>
 			<select id="searchType">
+				<option value="all" 
+				<%
+					if(searchType.equals("all")){
+				%>
+					selected="selected"
+				<%
+					}
+				%>
+				>제목 + 내용</option>
+				
+				<option value="brd_subject" 
+				<%
+					if(searchType.equals("brd_subject")){
+				%>
+					selected="selected"
+				<%
+					}
+				%>
+				>제목</option>
+				
 				<option value="brd_content" 
 				<%
 					if(searchType.equals("brd_content")){
@@ -165,7 +185,9 @@ function locate(pageNum){
 				<%
 					}
 				%>
-				>제목 + 내용</option>
+				>내용</option>
+				
+				
 				<option value="m_nick"
 				<%
 					if(searchType.equals("m_nick")){
